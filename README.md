@@ -1,6 +1,6 @@
 # http-utils
 
-> Helper utilities for [Luvit.io]() servers.
+> Helper utilities for [Luvit.io](http://luvit.io) servers.
 
 ## Install
 
@@ -10,7 +10,7 @@ You can install all libraries as one dependency:
 lit install voronianski/http-utils
 ```
 
-Or install every library separately.
+Or install every library separately:
 
 ### http-methods
 
