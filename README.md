@@ -36,6 +36,24 @@ p(mimes.getType('foo.jpg'))
 
 ```
 
+### match-path
+
+Match an Express.js-style path string such as `/user/:name` and get params.
+
+```
+lit install voronianski/match-path
+```
+
+```lua
+local matchPath = require('match-path')
+
+local parse = matchPath.compile('/foo/:bar')
+-- parsing function
+
+local params = parse('/foo/1')
+-- {foo = '1'}
+```
+
 ## License
 
 MIT Licensed
