@@ -71,7 +71,7 @@ require('http').createServer(function (req, res)
     -- do something with headers before they are sent
   end)
   res:finish()
-end)
+end):listen(3000)
 ```
 
 ## License
