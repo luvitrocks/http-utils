@@ -22,6 +22,8 @@ HTTP verbs that Luvit.io aim to support.
 lit install voronianski/http-methods
 ```
 
+---
+
 ### mimes
 
 Mime type getter from string.
