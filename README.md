@@ -10,13 +10,15 @@ You can install all libraries as one dependency:
 lit install voronianski/http-utils
 ```
 
+## Modules
+
 Or install every library separately:
 
 ### http-methods
 
 HTTP verbs that Luvit.io aim to support.
 
-```
+```bash
 lit install voronianski/http-methods
 ```
 
@@ -24,7 +26,7 @@ lit install voronianski/http-methods
 
 Mime type getter from string.
 
-```
+```bash
 lit install voronianski/mimes
 ```
 
@@ -36,11 +38,13 @@ p(mimes.getType('foo.jpg'))
 
 ```
 
+---
+
 ### match-path
 
 Match an Express.js-style path string such as `/user/:name` and get params.
 
-```
+```bash
 lit install voronianski/match-path
 ```
 
@@ -54,11 +58,13 @@ local params = parse('/foo/1')
 -- {foo = '1'}
 ```
 
+---
+
 ### on-headers-event
 
 Add `'headers'` event and execute a listener when a response is about to write headers.
 
-```
+```bash
 lit install voronianski/on-headers-event
 ```
 
@@ -74,11 +80,22 @@ require('http').createServer(function (req, res)
 end):listen(3000)
 ```
 
+---
+
 ### response-methods
 
 Patch [HTTP ServerResponse](https://luvit.io/api/http.html#http_class_http_serverresponse) with useful methods.
 
-### `res:status(code)`
+```bash
+lit install voronianski/response-methods
+```
+
+```lua
+-- adds helpful http.ServerResponse methods
+require('response-methods')
+```
+
+##### `res:status(code)`
 
 ```lua
 res:status(403):finish()
@@ -86,14 +103,14 @@ res:status(400):send('Bad Request')
 res:status(404):sendFile('/absolute/path/to/404.png')
 ```
 
-### `res:json(table)`
+##### `res:json(table)`
 
 ```lua
 res:json({user = 'tobi'})
 res:status(500):json({error = 'message'})
 ```
 
-### `res:redirect([status], path)`
+##### `res:redirect([status], path)`
 
 ```lua
 res:redirect('/foo/bar')
@@ -102,7 +119,7 @@ res:redirect(301, 'http://example.com')
 res:redirect('../login')
 ```
 
-### `res:send([body])`
+##### `res:send([body])`
 
 ```lua
 res:send(Buffer:new('whoop'))
@@ -112,7 +129,7 @@ res:status(404).send('Sorry, we cannot find that!')
 res:status(500).send({error = 'something blew up'})
 ```
 
-### `res:sendStatus(code)`
+##### `res:sendStatus(code)`
 
 ```lua
 res:sendStatus(200) -- equivalent to res:status(200):send('OK')
@@ -121,7 +138,7 @@ res:sendStatus(404) -- equivalent to res:status(404):send('Not Found')
 res:sendStatus(500) -- equivalent to res:status(500):send('Internal Server Error')
 ```
 
-### `res:sendFile(path, [options], [fn])`
+##### `res:sendFile(path, [options], [fn])`
 
 ## License
 
