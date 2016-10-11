@@ -74,6 +74,55 @@ require('http').createServer(function (req, res)
 end):listen(3000)
 ```
 
+### response-methods
+
+Patch [HTTP ServerResponse](https://luvit.io/api/http.html#http_class_http_serverresponse) with useful methods.
+
+### `res:status(code)`
+
+```lua
+res:status(403):finish()
+res:status(400):send('Bad Request')
+res:status(404):sendFile('/absolute/path/to/404.png')
+```
+
+### `res:json(table)`
+
+```lua
+res:json({user = 'tobi'})
+res:status(500):json({error = 'message'})
+```
+
+### `res:redirect([status], path)`
+
+```lua
+res:redirect('/foo/bar')
+res:redirect('http://example.com')
+res:redirect(301, 'http://example.com')
+res:redirect('../login')
+```
+
+### `res:send([body])`
+
+```lua
+res:send(Buffer:new('whoop'))
+res:send({some = 'json' })
+res:send('<p>some html</p>')
+res:status(404).send('Sorry, we cannot find that!')
+res:status(500).send({error = 'something blew up'})
+```
+
+### `res:sendStatus(code)`
+
+```lua
+res:sendStatus(200) -- equivalent to res:status(200):send('OK')
+res:sendStatus(403) -- equivalent to res:status(403):send('Forbidden')
+res:sendStatus(404) -- equivalent to res:status(404):send('Not Found')
+res:sendStatus(500) -- equivalent to res:status(500):send('Internal Server Error')
+```
+
+### `res:sendFile(path, [options], [fn])`
+
 ## License
 
 MIT Licensed
