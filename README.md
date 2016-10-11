@@ -54,6 +54,26 @@ local params = parse('/foo/1')
 -- {foo = '1'}
 ```
 
+### on-headers-event
+
+Add `'headers'` event and execute a listener when a response is about to write headers.
+
+```
+lit install voronianski/on-headers-event
+```
+
+```lua
+-- patches http.ServerResponse:flushHeaders method
+require('on-headers-event')
+
+require('http').createServer(function (req, res)
+  res:on('headers', function 
+    -- do something with headers before they are sent
+  end)
+  res:finish()
+end)
+```
+
 ## License
 
 MIT Licensed
