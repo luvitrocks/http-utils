@@ -95,6 +95,11 @@ lit install voronianski/response-methods
 ```lua
 -- adds helpful http.ServerResponse methods
 require('response-methods')
+
+local Utopia = require('utopia')
+local app = Utopia:new()
+
+app:listen(3000)
 ```
 
 ##### `res:status(code)`
