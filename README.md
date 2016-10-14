@@ -14,7 +14,7 @@ lit install voronianski/http-utils
 
 Or install every library separately:
 
-### http-methods
+## http-methods
 
 HTTP verbs that Luvit.io aim to support.
 
@@ -24,7 +24,7 @@ lit install voronianski/http-methods
 
 ---
 
-### mimes
+## mimes
 
 Mime type getter from string.
 
@@ -42,7 +42,7 @@ p(mimes.getType('foo.jpg'))
 
 ---
 
-### match-path
+## match-path
 
 Match an Express.js-style path string such as `/user/:name` and get params.
 
@@ -62,9 +62,9 @@ local params = parse('/foo/1')
 
 ---
 
-### on-headers-event
+## on-headers-event
 
-Add `'headers'` event and execute a listener when a response is about to write headers.
+Patches [HTTP ServerResponse](https://luvit.io/api/http.html#http_class_http_serverresponse) with  `'headers'` event which executes a listener when a response is about to write headers.
 
 ```bash
 lit install voronianski/on-headers-event
@@ -84,9 +84,9 @@ end):listen(3000)
 
 ---
 
-### response-methods
+## response-methods
 
-Patch [HTTP ServerResponse](https://luvit.io/api/http.html#http_class_http_serverresponse) with useful methods.
+Patches [HTTP ServerResponse](https://luvit.io/api/http.html#http_class_http_serverresponse) with useful response shortcut methods.
 
 ```bash
 lit install voronianski/response-methods
