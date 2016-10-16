@@ -7,6 +7,9 @@
     url = 'http://github.com/luvitrocks/http-utils.git'
   }
   tags = {'http', 'server', 'methods', 'rest', 'api', 'response', 'utility', 'redirect', 'json', 'status'}
+  dependencies = {
+    'voronianski/file-type'
+  },
   author = {
     name = 'Dmitri Voronianski',
     email = 'dmitri.voronianski@gmail.com'
@@ -14,8 +17,13 @@
   license = 'MIT'
 ]]
 
-local ServerResponse = require('http').ServerResponse
+local core = require('core')
 local json = require('json')
+local Buffer = require('buffer').Buffer
+local ServerResponse = require('http').ServerResponse
+local fileType = require('file-type')
+
+local instanceof = core.instanceof
 
 local STATUS_CODES = {
   [100] = 'Continue',
@@ -80,6 +88,10 @@ function _extend (obj, with_obj)
   return obj
 end
 
+function _isBuffer (b)
+  return instanceof(b, Buffer)
+end
+
 function ServerResponse:status (code)
   self.statusCode = code
 
@@ -88,6 +100,8 @@ end
 
 function ServerResponse:send (body)
   local code = self.statusCode or 200
+
+  -- check if string, json or buffer
   local headers = _extend({
     ['Content-Type'] = 'text/html; charset=utf-8',
     ['Content-Length'] = body and #body or 0
@@ -123,5 +137,5 @@ function ServerResponse:redirect (code, url)
 end
 
 function ServerResponse:sendStatus (code)
-  self:status(code):finish(STATUS_CODES[code])
+  self:status(code):send(STATUS_CODES[code])
 end
