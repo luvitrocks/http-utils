@@ -23,6 +23,7 @@ local Buffer = require('buffer').Buffer
 local ServerResponse = require('http').ServerResponse
 local fileType = require('file-type')
 
+local Object = core.Object
 local instanceof = core.instanceof
 
 local STATUS_CODES = {
@@ -100,26 +101,55 @@ end
 
 function ServerResponse:send (body)
   local code = self.statusCode or 200
+  local emptyContentType = not self.headers['Content-Type']
 
-  -- check if string, json or buffer
-  local headers = _extend({
-    ['Content-Type'] = 'text/html; charset=utf-8',
-    ['Content-Length'] = body and #body or 0
-  }, self.headers)
+  self:writeHead(code)
 
-  self:writeHead(code, headers)
+  if type(body) == 'string' then
+    if emptyContentType then
+      self:setHeader('Content-Type', 'text/html; charset=utf-8')
+    end
+    self:setHeader('Content-Length', #body)
+  else
+    if _isBuffer(body) then
+      local fileTypeData = fileType(body)
 
-  if body then
+      if fileTypeData and emptyContentType then
+        self:setHeader('Content-Type', fileTypeData.mime)
+      end
+
+      local bufString = body:toString()
+      self:setHeader('Content-Length', #bufString)
+    else
+      return self:json(body)
+    end
+  end
+
+  -- strip irrelevant headers
+  if self.statusCode == 204 or self.statusCode == 304 then
+    self.removeHeader('Content-Type')
+    self.removeHeader('Content-Length')
+    self.removeHeader('Transfer-Encoding')
+    body = '';
+  end
+
+  if body and req.method ~= 'HEAD' then
     self:write(body)
   end
 
   self:finish()
+
   collectgarbage()
+
+  return self
 end
 
-function ServerResponse:json (tbl)
-  self:setHeader('Content-Type', 'application/json')
-  self:finish(json.stringify(tbl, opts))
+function ServerResponse:json (tbl, opts)
+  if not self.headers['Content-Type'] then
+    self:setHeader('Content-Type', 'application/json')
+  end
+
+  self:send(json.stringify(tbl, opts))
 
   return self
 end
@@ -137,5 +167,7 @@ function ServerResponse:redirect (code, url)
 end
 
 function ServerResponse:sendStatus (code)
+  code = code or 200
+  self:setHeader('Content-Type', 'text/plain')
   self:status(code):send(STATUS_CODES[code])
 end

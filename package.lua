@@ -12,7 +12,9 @@ return {
   },
   homepage = 'https://github.com/luvitrocks/http-utils',
   licenses = {'MIT'},
-  dependencies = {},
+  dependencies = {
+    'voronianski/file-type'
+  },
   files = {
     '**.lua',
     '!test*',
