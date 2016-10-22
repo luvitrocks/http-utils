@@ -22,8 +22,6 @@ HTTP verbs that Luvit.io aim to support.
 lit install voronianski/http-methods
 ```
 
----
-
 ## mimes
 
 Mime type getter from string.
@@ -39,8 +37,6 @@ p(mimes.getType('foo.jpg'))
 -- 'image/jpeg'
 
 ```
-
----
 
 ## match-path
 
@@ -59,8 +55,6 @@ local parse = matchPath.compile('/foo/:bar')
 local params = parse('/foo/1')
 -- {foo = '1'}
 ```
-
----
 
 ## on-headers-event
 
@@ -81,8 +75,6 @@ require('http').createServer(function (req, res)
   res:finish()
 end):listen(3000)
 ```
-
----
 
 ## response-methods
 

@@ -78,6 +78,7 @@ local STATUS_CODES = {
 }
 
 -- TO DO: use better way of detecting Buffer class
+-- https://groups.google.com/forum/#!topic/luvit/RwnARiVm_XU
 function _isBuffer (b)
   if type(b) == 'table' and type(b.inspect) == 'function' then
     local str = b:inspect()
@@ -97,9 +98,9 @@ end
 function ServerResponse:send (body)
   local req = self.req
   local code = self.statusCode or 200
-  local emptyContentType = not self.headers['Content-Type']
+  local emptyContentType = not self:getHeader('Content-Type')
 
-  self:writeHead(code, self.headers)
+  -- self:writeHead(code, self.headers)
 
   if type(body) == 'string' then
     if emptyContentType then
@@ -124,9 +125,9 @@ function ServerResponse:send (body)
 
   -- strip irrelevant headers
   if self.statusCode == 204 or self.statusCode == 304 then
-    self.removeHeader('Content-Type')
-    self.removeHeader('Content-Length')
-    self.removeHeader('Transfer-Encoding')
+    self:removeHeader('Content-Type')
+    self:removeHeader('Content-Length')
+    self:removeHeader('Transfer-Encoding')
     body = '';
   end
 
@@ -142,7 +143,7 @@ function ServerResponse:send (body)
 end
 
 function ServerResponse:json (...)
-  if not self.headers['Content-Type'] then
+  if not self:getHeader('Content-Type') then
     self:setHeader('Content-Type', 'application/json')
   end
 
