@@ -17,14 +17,10 @@
   license = 'MIT'
 ]]
 
-local core = require('core')
 local json = require('json')
 local Buffer = require('buffer').Buffer
 local ServerResponse = require('http').ServerResponse
 local fileType = require('file-type')
-
-local Object = core.Object
-local instanceof = core.instanceof
 
 local STATUS_CODES = {
   [100] = 'Continue',
@@ -81,16 +77,15 @@ local STATUS_CODES = {
   [510] = 'Not Extended'                -- RFC 2774
 }
 
-function _extend (obj, with_obj)
-  for k, v in pairs(with_obj) do
-    obj[k] = v
+-- TO DO: use better way of detecting Buffer class
+function _isBuffer (b)
+  if type(b) == 'table' and type(b.inspect) == 'function' then
+    local str = b:inspect()
+
+    return type(str) == 'string' and str:find('<Buffer ')
   end
 
-  return obj
-end
-
-function _isBuffer (b)
-  return instanceof(b, Buffer)
+  return false
 end
 
 function ServerResponse:status (code)
@@ -100,15 +95,17 @@ function ServerResponse:status (code)
 end
 
 function ServerResponse:send (body)
+  local req = self.req
   local code = self.statusCode or 200
   local emptyContentType = not self.headers['Content-Type']
 
-  self:writeHead(code)
+  self:writeHead(code, self.headers)
 
   if type(body) == 'string' then
     if emptyContentType then
       self:setHeader('Content-Type', 'text/html; charset=utf-8')
     end
+
     self:setHeader('Content-Length', #body)
   else
     if _isBuffer(body) then
@@ -118,8 +115,8 @@ function ServerResponse:send (body)
         self:setHeader('Content-Type', fileTypeData.mime)
       end
 
-      local bufString = body:toString()
-      self:setHeader('Content-Length', #bufString)
+      self:setHeader('Content-Length', body.length)
+      body = body:toString()
     else
       return self:json(body)
     end
@@ -133,7 +130,7 @@ function ServerResponse:send (body)
     body = '';
   end
 
-  if body and req.method ~= 'HEAD' then
+  if body and req and req.method ~= 'HEAD' then
     self:write(body)
   end
 
@@ -144,14 +141,12 @@ function ServerResponse:send (body)
   return self
 end
 
-function ServerResponse:json (tbl, opts)
+function ServerResponse:json (...)
   if not self.headers['Content-Type'] then
     self:setHeader('Content-Type', 'application/json')
   end
 
-  self:send(json.stringify(tbl, opts))
-
-  return self
+  return self:send(json.stringify(...))
 end
 
 function ServerResponse:redirect (code, url)
@@ -161,13 +156,13 @@ function ServerResponse:redirect (code, url)
   end
 
   self:status(code):setHeader('Location', url)
-  self:send()
 
-  return self
+  return self:send()
 end
 
 function ServerResponse:sendStatus (code)
   code = code or 200
   self:setHeader('Content-Type', 'text/plain')
-  self:status(code):send(STATUS_CODES[code])
+
+  return self:status(code):send(STATUS_CODES[code])
 end
