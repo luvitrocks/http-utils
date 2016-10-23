@@ -8,6 +8,7 @@
   }
   tags = {'http', 'server', 'methods', 'rest', 'api', 'response', 'utility', 'redirect', 'json', 'status'}
   dependencies = {
+    'voronianski/mimes',
     'voronianski/file-type'
   },
   author = {
@@ -18,9 +19,10 @@
 ]]
 
 local json = require('json')
+local mimes = require('mimes')
+local fileType = require('file-type')
 local Buffer = require('buffer').Buffer
 local ServerResponse = require('http').ServerResponse
-local fileType = require('file-type')
 
 local STATUS_CODES = {
   [100] = 'Continue',
@@ -100,7 +102,7 @@ function ServerResponse:send (body)
   local code = self.statusCode or 200
   local emptyContentType = not self:getHeader('Content-Type')
 
-  -- self:writeHead(code, self.headers)
+  self:writeHead(code, self.headers)
 
   if type(body) == 'string' then
     if emptyContentType then
