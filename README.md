@@ -137,7 +137,7 @@ res:sendStatus(404) -- equivalent to res:status(404):send('Not Found')
 res:sendStatus(500) -- equivalent to res:status(500):send('Internal Server Error')
 ```
 
-##### `res:sendFile(path, [options], [fn])`
+<!-- ##### `res:sendFile(path, [options], [fn])` -->
 
 ## License
 
