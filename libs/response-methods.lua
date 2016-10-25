@@ -10,7 +10,7 @@
   dependencies = {
     'voronianski/mimes',
     'voronianski/file-type'
-  },
+  }
   author = {
     name = 'Dmitri Voronianski',
     email = 'dmitri.voronianski@gmail.com'
